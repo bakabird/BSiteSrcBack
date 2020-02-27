@@ -9,6 +9,7 @@
   "author": "rddcoding",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.2",
     "puppeteer": "^2.1.1"
   }
 }
