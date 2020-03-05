@@ -1,9 +1,13 @@
 const puppeteer = require('puppeteer');
 const helper = require("./helper.js");
 const axios = require("axios");
+const gConst = require("./gConst.js")
 const url = require('url');
 const urlencode = require('urlencode');
 const NAME = "B站搜索结果备份机-爬虫模块"
+
+const MaxDelayLevel = gConst.FIBNACHI.length - 1
+let CurDelayLevel = 5
 
 function pSetSecout(sec) {
   return new Promise((rso, rje) => {
@@ -111,7 +115,9 @@ function Log() {
 }
 
 (async () => {
-  const browser = await puppeteer.launch({headless: false});
+  const browser = await puppeteer.launch({
+    headless: false
+  });
   let page = await browser.newPage();
   // a run
   // - [0] collect
@@ -128,7 +134,7 @@ function Log() {
     while (!turnOver) {
       try {
         Log("run a turn")
-        await gotoPage(page,curPage)
+        await gotoPage(page, curPage)
         const collects = await getCollects(page)
         const isLastExist = await isAvArchive(collects[collects.length - 1].av)
         Log("isLastExist", isLastExist)
@@ -149,15 +155,35 @@ function Log() {
         break
       }
     }
+    if (curPage < 3) {
+      return gConst.RUN_RET_SIGNAL.DEALY
+    } else if (curPage == 3) {
+      return gConst.RUN_RET_SIGNAL.KEEP
+    } else {
+      return gConst.RUN_RET_SIGNAL.EARLY
+    }
   }
 
   // run
   // waiting 14~16min run again
   while (true) {
     Log("A RUN START")
-    await run()
+    const runSignal = await run()
     Log("A RUN END")
-    const waitSec = 60 * 15 + Math.round(Math.random() * 60 * 5)
+    switch (runSignal) {
+      case gConst.RUN_RET_SIGNAL.DEALY:
+        CurDelayLevel++
+        CurDelayLevel = CurDelayLevel > MaxDelayLevel ? MaxDelayLevel : CurDelayLevel
+        break
+      case gConst.RUN_RET_SIGNAL.KEEP:
+        // donothing
+        break
+      case gConst.RUN_RET_SIGNAL.EARLY:
+        CurDelayLevel--
+        CurDelayLevel = CurDelayLevel < 0 ? 0 : CurDelayLevel
+        break
+    }
+    const waitSec = gConst.FIBNACHI[CurDelayLevel] * 60
     Log("NEXT RUN WILL ON " + waitSec / 60 + " MINUTES LATER")
     await pSetSecout(waitSec)
   }
