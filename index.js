@@ -116,7 +116,7 @@ function Log() {
 
 (async () => {
   const browser = await puppeteer.launch({
-    headless: false
+    // headless: false
   });
   let page = await browser.newPage();
   // a run
