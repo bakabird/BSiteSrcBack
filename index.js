@@ -62,7 +62,7 @@ async function isAvArchive(av) {
   try {
     const response = await axios.get('http://localhost:8360/BsiteSrc/isAvE', {
       params: {
-        libId: `test`,
+        libId: gConst.LIBID,
         av: Number(av)
       }
     })
@@ -82,7 +82,7 @@ async function isAvArchive(av) {
 async function pushData(data) {
   try {
     const response = await axios.post('http://localhost:8360/BsiteSrc/pushData', {
-      libId: `test`,
+      libId: gConst.LIBID,
       data
     })
     // console.log(response);
