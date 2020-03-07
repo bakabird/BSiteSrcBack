@@ -6,7 +6,7 @@ const url = require('url');
 const urlencode = require('urlencode');
 const NAME = "B站搜索结果备份机-爬虫模块"
 
-const MaxDelayLevel = gConst.FIBNACHI.length - 1
+const MaxDelayLevel = gConst.DELAY_STRATEGY.length - 1
 let CurDelayLevel = 5
 
 function pSetSecout(sec) {
@@ -183,7 +183,7 @@ function Log() {
         CurDelayLevel = CurDelayLevel < 0 ? 0 : CurDelayLevel
         break
     }
-    const waitSec = gConst.FIBNACHI[CurDelayLevel] * 60
+    const waitSec = gConst.DELAY_STRATEGY[CurDelayLevel] * 60
     Log("NEXT RUN WILL ON " + waitSec / 60 + " MINUTES LATER")
     await pSetSecout(waitSec)
   }
