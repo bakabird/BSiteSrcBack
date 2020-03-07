@@ -7,7 +7,7 @@ const urlencode = require('urlencode');
 const NAME = "B站搜索结果备份机-爬虫模块"
 
 const MaxDelayLevel = gConst.DELAY_STRATEGY.length - 1
-let CurDelayLevel = 5
+let CurDelayLevel = 0
 
 function pSetSecout(sec) {
   return new Promise((rso, rje) => {
@@ -60,7 +60,7 @@ async function getCollects(page) {
 
 async function isAvArchive(av) {
   try {
-    const response = await axios.get('http://localhost:8360/BsiteSrc/isAvE', {
+    const response = await axios.get('http://localhost:8360/bsitesrc/isAvE', {
       params: {
         libId: gConst.LIBID,
         av: Number(av)
@@ -81,7 +81,7 @@ async function isAvArchive(av) {
 
 async function pushData(data) {
   try {
-    const response = await axios.post('http://localhost:8360/BsiteSrc/pushData', {
+    const response = await axios.post('http://localhost:8360/bsitesrc/pushData', {
       libId: gConst.LIBID,
       data
     })
